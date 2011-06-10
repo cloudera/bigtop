@@ -1,0 +1,131 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+
+hadoop_version=$(shell cat cloudera/build.properties | grep '^version=' | cut -d '=' -f 2)
+hadoop_build_path=build/hadoop-${hadoop_version}
+ANT_ARGS=-Dversion=${version_string} -Divy.home=$(shell pwd)/build/ivy.home
+
+ifeq (${DEB_BUILD_ARCH},amd64)
+  native_dir=Linux-amd64-64
+endif
+ifeq (${DEB_BUILD_ARCH},i386)
+  native_dir=Linux-i386-32
+endif
+
+
+#Architecture
+build: build-stamp
+build-stamp:
+	dh_testdir
+ifdef native_dir
+	JAVA_HOME=/usr/lib/jvm/java-6-sun ant -propertyfile  \
+	build.properties -propertyfile cloudera/build.properties -Dfusedfs=1 -Dcompile.native=true \
+	-Dhadoop.conf.dir=/etc/hadoop-0.20/conf \
+	-Dlibhdfs=1 -Dcompile.c++=true -Dcdh.maven=true task-controller bin-package compile-contrib
+else
+	JAVA_HOME=/usr/lib/jvm/java-6-sun ant -Dcdh.maven=true -propertyfile build.properties -propertyfile cloudera/build.properties bin-package
+endif
+	touch $@
+
+clean:  
+	dh_testdir
+	dh_testroot
+	rm -f build-arch-stamp build-indep-stamp build-stamp
+	ant -Dcdh.maven=true clean
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	bash cloudera/install_hadoop.sh \
+	  --cloudera-source-dir=cloudera/files \
+	  --build-dir=${hadoop_build_path} \
+	  --src-dir=debian/tmp/usr/src/hadoop-0.20 \
+	  --lib-dir=debian/tmp/usr/lib/hadoop-0.20 \
+	  --etc-dir=debian/tmp/etc/hadoop-0.20 \
+	  --prefix=debian/tmp \
+	  --apache-branch=0.20 \
+	  --doc-dir=debian/tmp/usr/share/doc/hadoop-0.20-doc \
+	  --example-dir=debian/tmp/usr/share/doc/hadoop-0.20/examples \
+	  --native-build-string=${native_dir} \
+	  --installed-lib-dir=/usr/lib/hadoop-0.20
+
+# Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
+	(dh_lintian) || /bin/true
+
+
+install-indep:
+	mkdir -p debian/tmp/etc/default
+	cp debian/hadoop-0.20.default debian/tmp/etc/default/hadoop-0.20
+
+	dh_install --sourcedir=debian/tmp -i
+
+	rm -Rf debian/hadoop-0.20/usr/lib/hadoop-0.20/lib/native
+	rm -Rf debian/hadoop-0.20/usr/lib/hadoop-0.20/sbin
+
+	rm -Rf debian/hadoop-0.20/usr/lib/hadoop-0.20/bin/fuse_dfs 
+	rm -Rf debian/hadoop-0.20/usr/bin/hadoop-fuse-dfs
+	rm -Rf debian/hadoop-0.20/usr/lib/hadoop-0.20/contrib/fuse-dfs
+
+
+# Init scripts
+	sh debian/install_init_scripts.sh
+
+install-arch:
+	dh_install --sourcedir=debian/tmp -s
+	chmod 6754 debian/hadoop-0.20-sbin/usr/lib/hadoop-0.20/sbin/${native_dir}/task-controller
+
+# Must not depend on anything. This is to be called by
+# binary-arch/binary-indep
+# in another 'make' thread.
+binary-common:  
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs CHANGES.txt -phadoop-0.20
+	dh_installdocs
+	sh debian/append_licenses.sh
+#	dh_installexamples
+#	dh_installmenu
+#	dh_installdebconf
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_python
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms -Xtask-controller
+#	dh_perl
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+# Build architecture independant packages using the common target.
+binary-indep: build install install-indep
+	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+
+# Build architecture dependant packages using the common target.
+binary-arch: build install install-arch
+	$(MAKE) -f debian/rules DH_OPTIONS=-s binary-common
+
+binary: binary-arch binary-indep
+.PHONY: build clean binary-indep binary-arch binary install configure

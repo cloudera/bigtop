@@ -1,0 +1,8 @@
+/usr/lib/hadoop-0.20
+/var/log/hadoop-0.20
+/usr/bin
+/var/run/hadoop-0.20
+/var/lib/hadoop-0.20
+/var/lib/hadoop-0.20/cache/hadoop
+/etc/default
+/usr/share/doc/hadoop-0.20
