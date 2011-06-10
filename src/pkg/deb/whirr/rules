@@ -7,8 +7,6 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-cloudera_version=$(shell cat cloudera/build.properties | grep '^version=' | cut -d '=' -f 2)
-
 patch: patch-stamp
 patch-stamp:	
 	touch $@
@@ -25,6 +23,8 @@ build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
 	# we'll just use the build from the tarball.
 	mkdir -p debian/tmp
+	# NOTE: FIXME me right away
+	cp -r debian/whirr.1 .
 	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 	touch $@
 
@@ -32,9 +32,8 @@ install: install-indep
 install-indep:	
 	dh_testdir
 	dh_testroot
-	sh -x cloudera/install_whirr.sh \
+	sh -x debian/install_whirr.sh \
 	  --build-dir=debian/tmp \
-	  --cloudera-source-dir=cloudera/ \
 	  --prefix=debian/whirr
 	(dh_lintian) || /bin/true
 

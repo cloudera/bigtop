@@ -7,8 +7,6 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-cloudera_version=$(shell cat cloudera/build.properties | grep '^version=' | cut -d '=' -f 2) 
-
 patch: patch-stamp
 patch-stamp:	
 	touch $@
@@ -23,17 +21,15 @@ clean:
 
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
-	mkdir -p debian/tmp
-	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
+	ant -Divy.home=`pwd`/debian/.ivy -f build.xml package
 	touch $@
 
 install: install-indep
 install-indep:	
 	dh_testdir
 	dh_testroot
-	sh -x cloudera/install_sqoop.sh \
+	sh -x debian/install_sqoop.sh \
 	  --build-dir=. \
-	  --cloudera-source-dir=cloudera/ \
 	  --prefix=debian/sqoop
 	dh_install -i
 

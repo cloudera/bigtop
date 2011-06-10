@@ -20,7 +20,7 @@ set -e
 
 case "$1" in
     configure)
-        update-rc.d hadoop-@HADOOP_MAJOR_VERSION@-@HADOOP_DAEMON@ defaults >/dev/null || exit 1
+        update-rc.d hadoop-@HADOOP_DAEMON@ defaults >/dev/null || exit 1
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

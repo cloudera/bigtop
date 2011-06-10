@@ -7,7 +7,7 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-cloudera_version=$(shell cat cloudera/build.properties | grep '^version=' | cut -d '=' -f 2 )
+build_version=${FLUME_VERSION}
 
 patch: patch-stamp
 patch-stamp:	
@@ -24,7 +24,7 @@ clean:
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
 	# Temporarily disabled - we'll just use the build from the tarball.
-	env JAVA_HOME=/usr/lib/jvm/java-6-sun ant -Dversion=$(cloudera_version) -Divy.home=`pwd`/debian/.ivy tar
+	ant -Dversion=$(build_version) -Divy.home=`pwd`/debian/.ivy tar
 	mkdir -p debian/tmp
 	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 	touch $@
@@ -34,13 +34,12 @@ install-indep:
 	dh_testdir
 	dh_testroot
 #	ant package
-	sh -x cloudera/install_flume.sh \
+	sh -x debian/install_flume.sh \
 	  --build-dir=. \
-	  --cloudera-source-dir=cloudera/ \
 	  --prefix=debian/flume 
 	# Remove hadoop dependency and instead symlink in the hadoop jar
 	rm debian/flume/usr/lib/flume/lib/hadoop-core-*
-	ln -s /usr/lib/hadoop-0.20/hadoop-core.jar debian/flume/usr/lib/flume/lib/hadoop-core.jar
+	ln -s /usr/lib/hadoop/hadoop-core.jar debian/flume/usr/lib/flume/lib/hadoop-core.jar
 	dh_install -i
 
 binary-common:	

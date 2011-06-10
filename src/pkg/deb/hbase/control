@@ -8,7 +8,7 @@ Homepage: http://hadoop.apache.org/hbase/
 
 Package: hadoop-hbase
 Architecture: all
-Depends: adduser, sun-java6-jre, hadoop-zookeeper (>= 3.3.1+8), hadoop-0.20 (>= 0.20.2+700)
+Depends: adduser, sun-java6-jre, hadoop-zookeeper (>= 3.3.1), hadoop
 Recommends: ntp
 Description: HBase is the Hadoop database
  Use it when you need random, realtime read/write access to your Big Data. 

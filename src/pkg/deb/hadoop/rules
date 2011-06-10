@@ -8,9 +8,8 @@
 export DH_OPTIONS
 
 
-hadoop_version=$(shell cat cloudera/build.properties | grep '^version=' | cut -d '=' -f 2)
-hadoop_build_path=build/hadoop-${hadoop_version}
-ANT_ARGS=-Dversion=${version_string} -Divy.home=$(shell pwd)/build/ivy.home
+hadoop_version=${HADOOP_VERSION}
+hadoop_build_path=$(shell pwd)/build/hadoop-${hadoop_version}
 
 ifeq (${DEB_BUILD_ARCH},amd64)
   native_dir=Linux-amd64-64
@@ -24,21 +23,20 @@ endif
 build: build-stamp
 build-stamp:
 	dh_testdir
-ifdef native_dir
-	JAVA_HOME=/usr/lib/jvm/java-6-sun ant -propertyfile  \
-	build.properties -propertyfile cloudera/build.properties -Dfusedfs=1 -Dcompile.native=true \
-	-Dhadoop.conf.dir=/etc/hadoop-0.20/conf \
-	-Dlibhdfs=1 -Dcompile.c++=true -Dcdh.maven=true task-controller bin-package compile-contrib
-else
-	JAVA_HOME=/usr/lib/jvm/java-6-sun ant -Dcdh.maven=true -propertyfile build.properties -propertyfile cloudera/build.properties bin-package
-endif
+	ant  \
+   -Dversion=${hadoop_version} \
+	-Divy.home=$(shell pwd)/build/ivy.home \
+	-Dcompile.native=true \
+	-Dhadoop.conf.dir=/etc/hadoop/conf \
+	-Dlibhdfs=1 -Dcompile.c++=true -Djdiff.build.dir=build/docs/jdiff-cloudera \
+	api-report bin-package compile-contrib
 	touch $@
 
 clean:  
 	dh_testdir
 	dh_testroot
 	rm -f build-arch-stamp build-indep-stamp build-stamp
-	ant -Dcdh.maven=true clean
+	ant clean
 
 	dh_clean
 
@@ -48,18 +46,17 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	bash cloudera/install_hadoop.sh \
-	  --cloudera-source-dir=cloudera/files \
+	bash debian/install_hadoop.sh \
+	  --distro-dir=debian \
 	  --build-dir=${hadoop_build_path} \
-	  --src-dir=debian/tmp/usr/src/hadoop-0.20 \
-	  --lib-dir=debian/tmp/usr/lib/hadoop-0.20 \
-	  --etc-dir=debian/tmp/etc/hadoop-0.20 \
+	  --src-dir=debian/tmp/usr/src/hadoop \
+	  --lib-dir=debian/tmp/usr/lib/hadoop \
+	  --etc-dir=debian/tmp/etc/hadoop \
 	  --prefix=debian/tmp \
-	  --apache-branch=0.20 \
-	  --doc-dir=debian/tmp/usr/share/doc/hadoop-0.20-doc \
-	  --example-dir=debian/tmp/usr/share/doc/hadoop-0.20/examples \
+	  --doc-dir=debian/tmp/usr/share/doc/hadoop-doc \
+	  --example-dir=debian/tmp/usr/share/doc/hadoop/examples \
 	  --native-build-string=${native_dir} \
-	  --installed-lib-dir=/usr/lib/hadoop-0.20
+	  --installed-lib-dir=debian/tmp/usr/lib/hadoop
 
 # Run dh_lintian if we've got it - this doesn't exist on debhelper 6 (eg Ubuntu Hardy)
 	(dh_lintian) || /bin/true
@@ -67,24 +64,23 @@ install: build
 
 install-indep:
 	mkdir -p debian/tmp/etc/default
-	cp debian/hadoop-0.20.default debian/tmp/etc/default/hadoop-0.20
+	cp debian/hadoop.default debian/tmp/etc/default/hadoop
 
 	dh_install --sourcedir=debian/tmp -i
 
-	rm -Rf debian/hadoop-0.20/usr/lib/hadoop-0.20/lib/native
-	rm -Rf debian/hadoop-0.20/usr/lib/hadoop-0.20/sbin
+	rm -Rf debian/hadoop/usr/lib/hadoop/lib/native
+	rm -Rf debian/hadoop/usr/lib/hadoop/sbin
 
-	rm -Rf debian/hadoop-0.20/usr/lib/hadoop-0.20/bin/fuse_dfs 
-	rm -Rf debian/hadoop-0.20/usr/bin/hadoop-fuse-dfs
-	rm -Rf debian/hadoop-0.20/usr/lib/hadoop-0.20/contrib/fuse-dfs
+	rm -Rf debian/hadoop/usr/lib/hadoop/bin/fuse_dfs 
+	rm -Rf debian/hadoop/usr/bin/hadoop-fuse-dfs
+	rm -Rf debian/hadoop/usr/lib/hadoop/contrib/fuse-dfs
 
 
 # Init scripts
-	sh debian/install_init_scripts.sh
+	sh -x  debian/install_init_scripts.sh
 
 install-arch:
 	dh_install --sourcedir=debian/tmp -s
-	chmod 6754 debian/hadoop-0.20-sbin/usr/lib/hadoop-0.20/sbin/${native_dir}/task-controller
 
 # Must not depend on anything. This is to be called by
 # binary-arch/binary-indep
@@ -92,7 +88,7 @@ install-arch:
 binary-common:  
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs CHANGES.txt -phadoop-0.20
+	dh_installchangelogs CHANGES.txt -phadoop
 	dh_installdocs
 	sh debian/append_licenses.sh
 #	dh_installexamples
@@ -110,7 +106,7 @@ binary-common:
 	dh_link
 	dh_strip
 	dh_compress
-	dh_fixperms -Xtask-controller
+#	dh_fixperms -Xtask-controller
 #	dh_perl
 	dh_makeshlibs
 	dh_installdeb

@@ -21,7 +21,7 @@ set -e
 
 case "$1" in
     purge)
-        update-rc.d -f hadoop-@HADOOP_MAJOR_VERSION@-@HADOOP_DAEMON@ remove > /dev/null || exit 1
+        update-rc.d -f hadoop-@HADOOP_DAEMON@ remove > /dev/null || exit 1
     ;;
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;

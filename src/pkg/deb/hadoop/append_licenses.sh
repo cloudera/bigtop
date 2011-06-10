@@ -12,9 +12,9 @@ is_apache_2() {
     head $1 | perl -n0 -e 'exit(!(m/Apache/ && m/Version 2\.0/))'
 }
 
-out_file=debian/hadoop-0.20/usr/share/doc/hadoop-0.20/copyright
+out_file=debian/hadoop/usr/share/doc/hadoop/copyright
 
-for license in `find debian/hadoop-0.20/usr/lib/hadoop-0.20/ -name \*LICENSE.txt` ; do
+for license in `find debian/hadoop/usr/lib/hadoop/ -name \*LICENSE.txt` ; do
     (echo
      echo -------------
      echo Included license: $(basename $license)

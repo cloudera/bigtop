@@ -119,8 +119,10 @@ start() {
          "/usr/lib/sqoop/bin/start-metastore.sh -p $PID_FILE -l $LOGDIR"
 }
 stop() {
-    su -s /bin/sh sqoop -c \
-        "/usr/lib/sqoop/bin/stop-metastore.sh -p $PID_FILE"
+    if hadoop_check_pidfile $PID_FILE ; then
+      su -s /bin/sh sqoop -c \
+          "/usr/lib/sqoop/bin/stop-metastore.sh -p $PID_FILE"
+    fi
 }
 
 case "$1" in

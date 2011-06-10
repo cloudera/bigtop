@@ -1,7 +1,7 @@
 #!/bin/bash
 
-MAJOR_VERSION=0.20
-SRC_PKG=hadoop-$MAJOR_VERSION
+MAJOR_VERSION=${HADOOP_VERSION}
+SRC_PKG=hadoop
 
 namenode_user=hdfs
 secondarynamenode_user=hdfs

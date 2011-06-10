@@ -11,7 +11,7 @@
 # Version:  @(#)skeleton  1.9  26-Feb-2001  miquels@cistron.nl
 #
 ### BEGIN INIT INFO
-# Provides:          hadoop-@HADOOP_MAJOR_VERSION@-@HADOOP_DAEMON@
+# Provides:          hadoop-@HADOOP_DAEMON@
 # Required-Start:    $network $local_fs
 # Required-Stop:
 # Should-Start:      $named
@@ -24,18 +24,18 @@
 # Support ephemeral /var/run. We need to create this directory before
 # hadoop-config.sh is sourced below since it sets HADOOP_PID_DIR if
 # this directory exists.
-install -d -m 0775 -o root -g hadoop /var/run/hadoop-0.20
+install -d -m 0775 -o root -g hadoop /var/run/hadoop
 
 # Include hadoop defaults if available
-if [ -f /etc/default/hadoop-@HADOOP_MAJOR_VERSION@ ] ; then
-  . /etc/default/hadoop-@HADOOP_MAJOR_VERSION@
+if [ -f /etc/default/hadoop ] ; then
+  . /etc/default/hadoop
 fi
 
 . $HADOOP_HOME/bin/hadoop-config.sh
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON_SCRIPT=$HADOOP_HOME/bin/hadoop-daemon.sh
-NAME=hadoop-@HADOOP_MAJOR_VERSION@-@HADOOP_DAEMON@
+NAME=hadoop-@HADOOP_DAEMON@
 DESC="Hadoop @HADOOP_DAEMON@ daemon"
 PID_FILE=$HADOOP_PID_DIR/hadoop-$HADOOP_IDENT_STRING-@HADOOP_DAEMON@.pid
 SLEEP_TIME=5

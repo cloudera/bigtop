@@ -8,7 +8,7 @@ Homepage: http://www.cloudera.com
 
 Package: flume
 Architecture: all
-Depends: sun-java6-jre, hadoop-zookeeper, adduser, hadoop-0.20 (>= 0.20.2+720)
+Depends: sun-java6-jre, hadoop-zookeeper, adduser, hadoop
 Description: reliable, scalable, and manageable distributed data collection application
  Flume is a reliable, scalable, and manageable distributed data collection
  application for collecting data such as logs and delivering it to data stores

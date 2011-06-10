@@ -7,8 +7,6 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-hbase_version=$(shell cat cloudera/build.properties | grep '^version=' | cut -d '=' -f 2) 
-
 patch: patch-stamp
 patch-stamp:	
 	touch $@
@@ -30,17 +28,16 @@ install: build
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
-	sh -x cloudera/install_hbase.sh \
+	sh -x debian/install_hbase.sh \
 		--build-dir=. \
-		--cloudera-source-dir=cloudera/ \
 		--doc-dir=usr/share/doc/hadoop-hbase-doc \
 		--prefix=debian/tmp
 	# Symlink in the dependency jars from their packages. Both of these packages
-	# provide an unversioned symlink foo.jar -> foo-0.1.2+345.jar.
+	# provide an unversioned symlink foo.jar -> foo-0.1.2.jar.
 	rm debian/tmp/usr/lib/hbase/lib/zookeeper-*.jar
 	rm debian/tmp/usr/lib/hbase/lib/hadoop-*.jar
 	ln -s /usr/lib/zookeeper/zookeeper.jar debian/tmp/usr/lib/hbase/lib/zookeeper.jar
-	ln -s /usr/lib/hadoop-0.20/hadoop-core.jar debian/tmp/usr/lib/hbase/lib/hadoop-core.jar
+	ln -s /usr/lib/hadoop/hadoop-core.jar debian/tmp/usr/lib/hbase/lib/hadoop-core.jar
 
 	# Wage war on "executable-not-elf-or-script" warnings:
 	### ruby scripts should not be executable - they require
