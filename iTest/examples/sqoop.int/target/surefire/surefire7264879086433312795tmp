@@ -1,0 +1,8 @@
+#surefire
+#Fri Apr 01 16:38:03 PDT 2011
+org.apache.itest.log4j.level=INFO
+log4j.configuration=org.apache.itest.log4j.configuration
+user.dir=/home/rvs/src/iTest/examples/sqoop.int/target
+localRepository=/home/rvs/.m2/repository
+basedir=/home/rvs/src/iTest/examples/sqoop.int
+HADOOP_HOME=/usr/lib/hadoop-0.20

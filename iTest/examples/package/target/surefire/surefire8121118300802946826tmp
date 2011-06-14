@@ -1,0 +1,10 @@
+#surefire
+#Thu Apr 21 14:00:33 PDT 2011
+log4j.configuration=com.cloudera.itest.log4j.configuration
+com.cloudera.itest.log4j.level=INFO
+user.dir=/home/rvs/src/iTest/examples/package/target
+localRepository=/home/rvs/.m2/repository
+basedir=/home/rvs/src/iTest/examples/package
+cdh.repo.version=3
+cdh.repo.host=archive.cloudera.com
+HADOOP_HOME=a

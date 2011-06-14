@@ -1,0 +1,4 @@
+org.apache.itest
+org.apache.itest.pmanager
+org.apache.itest.posix
+org.apache.itest.shell

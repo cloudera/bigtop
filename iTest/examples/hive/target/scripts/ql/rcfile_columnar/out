@@ -1,0 +1,29 @@
+
+CREATE table columnTable (key STRING, value STRING)
+ROW FORMAT SERDE
+  'org.apache.hadoop.hive.serde2.columnar.ColumnarSerDe'
+STORED AS
+  INPUTFORMAT 'org.apache.hadoop.hive.ql.io.RCFileInputFormat'
+  OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.RCFileOutputFormat'
+
+
+FROM src
+INSERT OVERWRITE TABLE columnTable SELECT src.key, src.value LIMIT 10
+Deleted hdfs://monster01.sf.cloudera.com:17020/user/hive/warehouse/columntable
+
+describe columnTable
+key	string	from deserializer
+value	string	from deserializer
+
+
+SELECT columnTable.* FROM columnTable
+238	val_238
+86	val_86
+311	val_311
+27	val_27
+165	val_165
+409	val_409
+255	val_255
+278	val_278
+98	val_98
+484	val_484

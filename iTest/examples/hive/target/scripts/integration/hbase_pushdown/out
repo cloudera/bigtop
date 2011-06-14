@@ -1,0 +1,306 @@
+ABSTRACT SYNTAX TREE:
+  (TOK_QUERY (TOK_FROM (TOK_TABREF (TOK_TABNAME hbase_pushdown))) (TOK_INSERT (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE)) (TOK_SELECT (TOK_SELEXPR TOK_ALLCOLREF)) (TOK_WHERE (= (TOK_TABLE_OR_COL key) 90))))
+
+STAGE DEPENDENCIES:
+  Stage-1 is a root stage
+  Stage-0 is a root stage
+
+STAGE PLANS:
+  Stage: Stage-1
+    Map Reduce
+      Alias -> Map Operator Tree:
+        hbase_pushdown 
+          TableScan
+            alias: hbase_pushdown
+            filterExpr:
+                expr: (key = 90)
+                type: boolean
+            Filter Operator
+              predicate:
+                  expr: (key = 90)
+                  type: boolean
+              Select Operator
+                expressions:
+                      expr: key
+                      type: int
+                      expr: value
+                      type: string
+                outputColumnNames: _col0, _col1
+                File Output Operator
+                  compressed: false
+                  GlobalTableId: 0
+                  table:
+                      input format: org.apache.hadoop.mapred.TextInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+
+
+90	val_90
+ABSTRACT SYNTAX TREE:
+  (TOK_QUERY (TOK_FROM (TOK_TABREF (TOK_TABNAME hbase_pushdown))) (TOK_INSERT (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE)) (TOK_SELECT (TOK_SELEXPR TOK_ALLCOLREF)) (TOK_WHERE (and (= (TOK_TABLE_OR_COL key) 90) (like (TOK_TABLE_OR_COL value) '%90%')))))
+
+STAGE DEPENDENCIES:
+  Stage-1 is a root stage
+  Stage-0 is a root stage
+
+STAGE PLANS:
+  Stage: Stage-1
+    Map Reduce
+      Alias -> Map Operator Tree:
+        hbase_pushdown 
+          TableScan
+            alias: hbase_pushdown
+            filterExpr:
+                expr: (key = 90)
+                type: boolean
+            Filter Operator
+              predicate:
+                  expr: (value like '%90%')
+                  type: boolean
+              Filter Operator
+                predicate:
+                    expr: ((key = 90) and (value like '%90%'))
+                    type: boolean
+                Select Operator
+                  expressions:
+                        expr: key
+                        type: int
+                        expr: value
+                        type: string
+                  outputColumnNames: _col0, _col1
+                  File Output Operator
+                    compressed: false
+                    GlobalTableId: 0
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+
+
+90	val_90
+ABSTRACT SYNTAX TREE:
+  (TOK_QUERY (TOK_FROM (TOK_TABREF (TOK_TABNAME hbase_pushdown))) (TOK_INSERT (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE)) (TOK_SELECT (TOK_SELEXPR TOK_ALLCOLREF)) (TOK_WHERE (and (and (= (TOK_TABLE_OR_COL key) 90) (like (TOK_TABLE_OR_COL value) '%90%')) (= (TOK_TABLE_OR_COL key) (TOK_FUNCTION TOK_INT (TOK_TABLE_OR_COL value)))))))
+
+STAGE DEPENDENCIES:
+  Stage-1 is a root stage
+  Stage-0 is a root stage
+
+STAGE PLANS:
+  Stage: Stage-1
+    Map Reduce
+      Alias -> Map Operator Tree:
+        hbase_pushdown 
+          TableScan
+            alias: hbase_pushdown
+            filterExpr:
+                expr: (key = 90)
+                type: boolean
+            Filter Operator
+              predicate:
+                  expr: ((value like '%90%') and (key = UDFToInteger(value)))
+                  type: boolean
+              Filter Operator
+                predicate:
+                    expr: (((key = 90) and (value like '%90%')) and (key = UDFToInteger(value)))
+                    type: boolean
+                Select Operator
+                  expressions:
+                        expr: key
+                        type: int
+                        expr: value
+                        type: string
+                  outputColumnNames: _col0, _col1
+                  File Output Operator
+                    compressed: false
+                    GlobalTableId: 0
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+
+
+ABSTRACT SYNTAX TREE:
+  (TOK_QUERY (TOK_FROM (TOK_TABREF (TOK_TABNAME hbase_pushdown))) (TOK_INSERT (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE)) (TOK_SELECT (TOK_SELEXPR TOK_ALLCOLREF)) (TOK_WHERE (and (and (= (TOK_TABLE_OR_COL key) 80) (= (TOK_TABLE_OR_COL key) 90)) (like (TOK_TABLE_OR_COL value) '%90%')))))
+
+STAGE DEPENDENCIES:
+  Stage-1 is a root stage
+  Stage-0 is a root stage
+
+STAGE PLANS:
+  Stage: Stage-1
+    Map Reduce
+      Alias -> Map Operator Tree:
+        hbase_pushdown 
+          TableScan
+            alias: hbase_pushdown
+            Filter Operator
+              predicate:
+                  expr: (((key = 80) and (key = 90)) and (value like '%90%'))
+                  type: boolean
+              Filter Operator
+                predicate:
+                    expr: (((key = 80) and (key = 90)) and (value like '%90%'))
+                    type: boolean
+                Select Operator
+                  expressions:
+                        expr: key
+                        type: int
+                        expr: value
+                        type: string
+                  outputColumnNames: _col0, _col1
+                  File Output Operator
+                    compressed: false
+                    GlobalTableId: 0
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+
+
+ABSTRACT SYNTAX TREE:
+  (TOK_QUERY (TOK_FROM (TOK_TABREF (TOK_TABNAME hbase_pushdown))) (TOK_INSERT (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE)) (TOK_SELECT (TOK_SELEXPR TOK_ALLCOLREF))))
+
+STAGE DEPENDENCIES:
+  Stage-0 is a root stage
+
+STAGE PLANS:
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+
+
+ABSTRACT SYNTAX TREE:
+  (TOK_QUERY (TOK_FROM (TOK_TABREF (TOK_TABNAME hbase_pushdown))) (TOK_INSERT (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE)) (TOK_SELECT (TOK_SELEXPR TOK_ALLCOLREF)) (TOK_WHERE (> (TOK_FUNCTION when (= (TOK_TABLE_OR_COL key) 90) 2 4) 3))))
+
+STAGE DEPENDENCIES:
+  Stage-1 is a root stage
+  Stage-0 is a root stage
+
+STAGE PLANS:
+  Stage: Stage-1
+    Map Reduce
+      Alias -> Map Operator Tree:
+        hbase_pushdown 
+          TableScan
+            alias: hbase_pushdown
+            Filter Operator
+              predicate:
+                  expr: (CASE WHEN ((key = 90)) THEN (2) ELSE (4) END > 3)
+                  type: boolean
+              Filter Operator
+                predicate:
+                    expr: (CASE WHEN ((key = 90)) THEN (2) ELSE (4) END > 3)
+                    type: boolean
+                Select Operator
+                  expressions:
+                        expr: key
+                        type: int
+                        expr: value
+                        type: string
+                  outputColumnNames: _col0, _col1
+                  File Output Operator
+                    compressed: false
+                    GlobalTableId: 0
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+
+
+ABSTRACT SYNTAX TREE:
+  (TOK_QUERY (TOK_FROM (TOK_TABREF (TOK_TABNAME hbase_pushdown))) (TOK_INSERT (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE)) (TOK_SELECT (TOK_SELEXPR TOK_ALLCOLREF)) (TOK_WHERE (or (= (TOK_TABLE_OR_COL key) 80) (like (TOK_TABLE_OR_COL value) '%90%')))))
+
+STAGE DEPENDENCIES:
+  Stage-1 is a root stage
+  Stage-0 is a root stage
+
+STAGE PLANS:
+  Stage: Stage-1
+    Map Reduce
+      Alias -> Map Operator Tree:
+        hbase_pushdown 
+          TableScan
+            alias: hbase_pushdown
+            Filter Operator
+              predicate:
+                  expr: ((key = 80) or (value like '%90%'))
+                  type: boolean
+              Filter Operator
+                predicate:
+                    expr: ((key = 80) or (value like '%90%'))
+                    type: boolean
+                Select Operator
+                  expressions:
+                        expr: key
+                        type: int
+                        expr: value
+                        type: string
+                  outputColumnNames: _col0, _col1
+                  File Output Operator
+                    compressed: false
+                    GlobalTableId: 0
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+
+
+ABSTRACT SYNTAX TREE:
+  (TOK_QUERY (TOK_FROM (TOK_TABREF (TOK_TABNAME hbase_pushdown))) (TOK_INSERT (TOK_DESTINATION (TOK_DIR TOK_TMP_FILE)) (TOK_SELECT (TOK_SELEXPR TOK_ALLCOLREF)) (TOK_WHERE (= (TOK_TABLE_OR_COL key) 90))))
+
+STAGE DEPENDENCIES:
+  Stage-1 is a root stage
+  Stage-0 is a root stage
+
+STAGE PLANS:
+  Stage: Stage-1
+    Map Reduce
+      Alias -> Map Operator Tree:
+        hbase_pushdown 
+          TableScan
+            alias: hbase_pushdown
+            Filter Operator
+              predicate:
+                  expr: (key = 90)
+                  type: boolean
+              Filter Operator
+                predicate:
+                    expr: (key = 90)
+                    type: boolean
+                Select Operator
+                  expressions:
+                        expr: key
+                        type: int
+                        expr: value
+                        type: string
+                  outputColumnNames: _col0, _col1
+                  File Output Operator
+                    compressed: false
+                    GlobalTableId: 0
+                    table:
+                        input format: org.apache.hadoop.mapred.TextInputFormat
+                        output format: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+
+

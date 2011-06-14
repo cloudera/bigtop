@@ -1,0 +1,10 @@
+#surefire
+#Fri Apr 01 16:42:35 PDT 2011
+org.apache.itest.log4j.level=INFO
+log4j.configuration=org.apache.itest.log4j.configuration
+user.dir=/home/rvs/src/iTest/examples/package/target
+localRepository=/home/rvs/.m2/repository
+basedir=/home/rvs/src/iTest/examples/package
+cdh.repo.version=3
+cdh.repo.host=archive.cloudera.com
+HADOOP_HOME=/usr/lib/hadoop-0.20

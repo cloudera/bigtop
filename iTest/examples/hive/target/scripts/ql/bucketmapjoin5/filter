@@ -1,0 +1,1 @@
+sed -e 's#Copying file:.*/srcbucket2#Copying file:srcbucket2#'
