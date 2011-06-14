@@ -2,7 +2,7 @@
 
 # Welcome to Bigtop!
 
-Bigtop is a project for the development of packaging and tests of the [[Apache Hadoop|http://hadoop.apache.org/]] ecosystem.
+Bigtop is a project for the development of packaging and tests of the [Apache Hadoop](http://hadoop.apache.org/) ecosystem.
 
 The primary goal of Bigtop is to build a community around the packaging and interoperability testing of Hadoop-related projects. This includes testing at various levels (packaging, platform, runtime, upgrade, etc...) developed by a community with a focus on the system as a whole, rather than individual projects.
 
@@ -32,26 +32,26 @@ On Debian-based systems one also needs
 
 ## Building packages
 
-$ make [component-name]-[rpm|deb]
+    $ make [component-name]-[rpm|deb]
 
 ## Building local YUM/APT repositories
 
-$ make [component-name]-[yum|apt]
+    $ make [component-name]-[yum|apt]
 
 ##  Running the tests
 
 WARNING: since testing packages requires installing them on a live system it is highly recommended to use VMs for that.
 
-Testing Bigtop is done using iTest framework. For more documentation on iTest visit the [[iTest page|http://cloudera.github.com/bigtop/iTest]] but here's 2 steps to get started:
+Testing Bigtop is done using iTest framework. For more documentation on iTest visit the [iTest page](http://cloudera.github.com/bigtop/iTest) but here's 2 steps to get started:
 
 * install package testing iTest artifacts locally:
 
-  `cd test/src/smokes/package/ && mvn install -DskipTests -DskipITs -DperformRelease`
+        cd test/src/smokes/package/ && mvn install -DskipTests -DskipITs -DperformRelease
 
 * use those locally installed iTest package testing artifacts to run a suite:
 
-  `cd test/suites/package/ && mvn clean verify -Dcdh.repo.file.url.CentOS=XXX  -D'org.apache.maven-failsafe-plugin.testInclude=**/TestPackagesReadiness.*'`
+        cd test/suites/package/ && mvn clean verify -Dcdh.repo.file.url.CentOS=XXX  -D'org.apache.maven-failsafe-plugin.testInclude=**/TestPackagesReadiness.*'
 
 ##  Contact us!
 
-You can get in touch with us on the [[user list|https://groups.google.com/a/cloudera.org/group/bigtop-user/topics]] or [[developer list|https://groups.google.com/a/cloudera.org/group/bigtop-dev/topics]].
+You can get in touch with us on the [user list](https://groups.google.com/a/cloudera.org/group/bigtop-user/topics) or [developer list](https://groups.google.com/a/cloudera.org/group/bigtop-dev/topics).
