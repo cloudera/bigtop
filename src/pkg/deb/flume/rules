@@ -24,7 +24,7 @@ clean:
 build-indep: build-indep-stamp
 build-indep-stamp: patch-stamp
 	# Temporarily disabled - we'll just use the build from the tarball.
-	ant -Dversion=$(build_version) -Divy.home=`pwd`/debian/.ivy tar
+#	ant -Dversion=$(build_version) -Divy.home=`pwd`/debian/.ivy tar
 	mkdir -p debian/tmp
 	tar cf - --exclude=debian/\* . | (cd debian/tmp && tar xf -)
 	touch $@
