@@ -110,8 +110,6 @@ for i in `find lib/*.jar build/lib/*.jar -type f |grep -v zookeeper`
 	cp $i ${PREFIX}/${LIB_DIR}/lib #don't copy directories by default
 done
 
-cp flume*.jar ${PREFIX}/${LIB_DIR}/lib
-
 cp -a webapps ${PREFIX}/${LIB_DIR}
 
 install -d -m 0755 $PREFIX/$BIN_DIR
